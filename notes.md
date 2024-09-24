@@ -137,3 +137,142 @@ Use Django's templating language to include dynamic content, loops, and conditio
  
     python manage.py runserver
     (in url enter correct path i.e localhost/djangobasicapp/Home)
+
+
+# HTTPs REQUEST
+
+* GET: Retrieve data from the server.
+* POST: Send data to the server to create a new resource.
+* PUT: Update an existing resource with new data (typically replacing the entire resource).
+* DELETE: Remove a resource from the server.
+* PATCH:  Partially update an existing resource.
+           allows you to update only the fields you specify, leaving all other fields unchanged.
+
+# Django Project Structure
+
+* Manage.py
+
+- The manage.py file is a crucial part of any Django project, acting as a command-line utility for managing your application.
+- This is a command-line utility that allows you to interact with your Django project. You can run the server, apply migrations, create apps, and more.
+- It serves as a wrapper around django-admin and sets the environment for your project.
+
+* Setting.py
+
+- Contains all the configuration settings for your Django project, such as database configurations, installed apps, middleware, and static file settings.
+
+* Urls.py
+
+- This file defines the URL patterns for your project. It routes requests to the appropriate view based on the URL.
+
+* asgi.py
+
+- This file is for ASGI (Asynchronous Server Gateway Interface) applications. It’s useful for running Django with asynchronous frameworks.
+
+* wsgi.py
+
+- This file is for WSGI (Web Server Gateway Interface) applications, allowing your Django project to communicate with web servers. It’s the standard interface for Python web applications.
+
+
+# Django App Folder Structre
+
+* Migrations
+
+- This directory contains migration files that Django uses to apply changes to your database schema.
+
+* __init__.py
+
+- An empty file that tells Python to treat the directory as a package. You can also use it to define package-level variables or imports.
+
+* admin.py
+
+- Register your models here to make them accessible in the Django admin interface.
+
+* apps.py
+
+- Contains configuration for the app. Here, you can set the app’s name and other metadata.
+
+* models.py
+
+- Define your data models (database schema) here. Each model is a Python class that corresponds to a database table.
+
+* tests.py
+
+- Write unit tests for your app here to ensure its functionality and reliability.
+
+* views.py
+
+- Define your view functions or class-based views that handle incoming requests and return responses.
+
+
+# Request Life Cycle
+
+1. HTTP Request:
+
+A user interacts with a web browser and sends an HTTP request (e.g., GET, POST) to your Django application.
+
+2. URL Routing:
+
+The request reaches the Django server, which uses the urls.py files to match the incoming URL to a specific view.
+
+Django checks each URL pattern defined in urls.py to find a match.
+
+3. View Function:
+
+Once a matching URL is found, Django calls the corresponding view function or class-based view.
+
+The view receives the HTTP request and any parameters captured from the URL.
+
+4. Middleware Processing:
+
+Before the view is executed, any middleware specified in the MIDDLEWARE setting will be processed. Middleware can modify the request or perform 
+
+actions such as authentication, logging, or request validation.
+
+Middleware can also halt the request and return a response early (e.g., for authentication failures).
+
+5. Request Handling:
+
+The view processes the request. It may:
+    Query the database using models.
+    Process forms.
+    Perform business logic.
+    Generate context data for rendering.
+
+6. Template Rendering:
+
+If the view returns an HTML response, Django uses the template engine to render the HTML page. It combines the template with the context data provided by the view.
+
+This involves searching for the template in the specified directories.
+
+7. Response Generation:
+
+After rendering, Django creates an HttpResponse object containing the rendered content (HTML, JSON, etc.) and returns it to the middleware.
+
+8. Middleware Response Processing:
+
+The response then passes through the middleware stack again. Middleware can modify the response before it is sent back to the client (e.g., adding headers, compression).
+
+9. HTTP Response:
+
+Finally, the response is sent back to the client (the user’s browser). The browser then displays the content to the user.
+
+
+* Summary of Key Components
+
+    - URLs: Route requests to views based on URL patterns.
+    - Views: Handle business logic and return responses.
+    - Middleware: Process requests and responses globally; can modify or terminate the request/response cycle.
+    - Templates: Render HTML responses by combining templates with context data.
+
+* Simplified Version
+
+   → Client Request 
+   → Django URLs
+   → Middleware (Request Processing) 
+   → View Function 
+   → Database Models (optional) 
+   → Template Rendering (if HTML response) 
+   → Middleware (Response Processing) 
+   → HTTP Response 
+   → Client Response.
+
