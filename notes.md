@@ -1,3 +1,25 @@
+# Installation
+
+1. Install python and pip
+    sudo apt install python3 python3-pip
+
+2. Install virtual environment
+    sudo apt install python3-venv
+
+3. Activate virtual environment
+    source venv/bin/activate
+
+4. Install Django
+    pip install Django
+
+5. Create Project
+    django-admin startproject project_name
+
+6. Run server
+    cd project_name
+    python manage.py runserver
+
+
 # Intorduction
 
 - Python based web framework
@@ -175,7 +197,11 @@ Use Django's templating language to include dynamic content, loops, and conditio
 
 # Django App Folder Structre
 
-* Migrations
+* Migrations(useful in making database config)
+
+-  migrations are a way to propagate changes you make to your models (like adding a new field or deleting a model) into your database schema. 
+
+- They serve as version control for your database, allowing you to apply and track changes in a structured manner.
 
 - This directory contains migration files that Django uses to apply changes to your database schema.
 
@@ -276,3 +302,175 @@ Finally, the response is sent back to the client (the user’s browser). The bro
    → HTTP Response 
    → Client Response.
 
+
+# Simple Way To Fetch Data From REST API
+
+1. Create View in view.py file
+
+    def ShowUsers(req):
+        templatefulename = 'djangobasicapp/ShowUsers.html'
+        response = CallRestAPI()
+        dict = {'users':response.json()}
+        return render(req,templatefulename,dict)
+
+    def CallRestAPI():
+        BASE_URL = 'https://fakestoreapi.com'
+        response = requests.get(f'{BASE_URL}/users')
+        return(response)
+
+2. Add Route in urls.py
+
+     path('Users', views.ShowUsers, name='users')
+
+3. Create HTML File in Templates ShowUsers.html under djangobasicapp
+
+    {% for user in users %}
+
+        {{user.id}}
+        {{user.username}}
+        {{user.email}}
+
+    {%endfor%}
+
+4. Run The Server
+
+    python manage.py runserver
+
+
+# Create Custom Filters
+
+- Create folder in djangobasicapp > customfilter.py and __init__.py add these two files
+
+- in customfilter.py
+  from django import template
+    from num2words import num2words
+
+    register = template.Library()
+
+    def first_five_upper(value):
+        result = value[:5].upper()
+        return result
+
+- register.filter('firstfiveupper',first_five_upper)
+
+- in views create view for customfilter
+
+    def CustomFilterDemo(req):
+    webframeworks={
+        'Description':'Django is python framework that makes easier to create web siters',
+        'InDemand':4.5,
+        'PollNumber':23423
+    }
+
+    return render(req,'djangobasicapp/TestCustomFilters.html',webframeworks)
+
+- Create TestCustomFilters.html
+    
+    first add {% load customfilter %}
+
+     <li>COurse Description :  {{Description | firstfiveupper}}</li>
+
+- Then add toute to url 
+
+     path('CustomFilterDemo',views.CustomFilterDemo,name='CustomFilterDemo'),
+
+
+# Setting Up Database Configuration
+
+* Install postgresql and pgadmin
+
+* Configure Database in setting.py
+
+    - Create new project in venv
+        django-admin startproject CRUDOperation
+    
+    - Create new app in venv 
+        django-admin startapp PayRollApp
+
+    - Install psycopg2 library(connections between Python applications and PostgreSQL databases.)
+        pip install psycopg2
+
+    - In project settings.py add database config and alonside create new server and database in pgadmin(with correct db_name, user,password,host,port)
+          'default': {
+                'ENGINE': 'django.db.backends.postgresql',   # Use the PostgreSQL backend
+                'NAME': 'myproject_db2',                     # Your database name
+                'USER': 'postgres',                          # Database user
+                'PASSWORD': 'password',                      # Password for the user
+                'HOST': 'localhost',                         # Database host
+                'PORT': '5432',                              # Default PostgreSQL port
+        }
+
+    - Create Migrations()
+        python manage.py makemigrations app_name
+
+    - Apply Migration(To apply the migrations and update your database schema,)
+        python manage.py migrate
+    
+    - In last check db in pgadmin4 for tables(newly added)
+
+
+# How To Add model
+
+-  Create Model in models.py (e.g) Employee
+
+    Countries = [
+        ('IND','INDIA'),
+        ('USA', 'United State Of America'),
+        ('UK', 'United Kingdom')
+    ]
+
+    class Employee(models.Model):
+    FirstName = models.CharField(max_length=30)
+    LastName = models.CharField(max_length=30)
+    TitleName = models.CharField(max_length=30)
+    HasPassport = models.BooleanField()
+    Salary = models.IntegerField()
+    BirthDate = models.DateField()
+    HireDate = models.DateField()
+    Notes = models.CharField(max_length=200)
+    Country = models.CharField(max_length=35,choices=Countries,default=None)
+    Email = models.EmailField(default='', max_length=50)
+
+- Make Migrations TO App (Empolyee Model will be created after migrations and file also be created in migration)
+
+    python manage.py makemigrations PayRollApp
+
+- Apply Migrations(Column will be added in db table)
+
+    python manage.py migrate
+
+# How to add new Field in model
+
+e.g.
+- add new field in model.py
+    Email = models.EmailField(default='', max_length=50)
+
+- Make Migration(new field will be added to empployee model)
+    python manage.py makemigrations --name AddingEmail PayRollApp
+
+- Apply Migration(Column will be added in db table)
+    pyhton manage.py migrate PaYRollApp Nmber_AddingEmail
+
+- Check For All Applied Migrations
+    python manage.py showmigrations
+
+
+# Create SuperUSer
+
+- python manage.py createsuperuser
+    - username : 
+    - Email:
+    - password:
+
+- Run server and goto admin path
+    - login admin panel
+
+- To Create new Employee in(PayRollApp) Register Model in admin.py
+    
+    admin.site.register(Employee)
+
+- Then Refresh server
+    - New Employee option will be there
+    - add new employee
+
+- Check for new employee info in database(pgadmin4)
