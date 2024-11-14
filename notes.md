@@ -455,7 +455,7 @@ e.g.
     python manage.py showmigrations
 
 
-# Create SuperUSer
+# Create SuperUSer for admin panel
 
 - python manage.py createsuperuser
     - username : 
@@ -474,3 +474,62 @@ e.g.
     - add new employee
 
 - Check for new employee info in database(pgadmin4)
+
+# How To Show Employee data on Web Browser
+
+- First Create View in Views.py
+    def EmployeeList(req):
+    Employees = Employee.objects.all()               # Import Employee from PayRollApp.models
+    TemplateFile = 'PayRollApp/EmployeeList.html'
+    Dict = {'Employee':Employees}
+    return render(req,TemplateFile,Dict)
+
+- Create template folder and EmployeeList.html in it
+
+- Template Configurations
+    - In settings.py add
+        TEMPLATES_DIR = BASE_DIR / 'templates'
+    - add TEMPLATE_DIR in TEMPLATES.DIRS
+
+- add tags to html file
+
+- add route in urls.py
+    path('EmployeeList',views.EmployeeList,name='EmployeeList')
+
+- Connect PayRollApp route to projects urls.py
+    path('PayRollApp/',include('PayRollApp.urls'))
+
+
+# DataBase Seeding
+
+- Means sending data from json file to the tables(created models)
+
+- Fixtures are JSON, XML, or YAML files that contain serialized data to load into your database.
+    MasterDepartment.json
+    MasterCountries.json
+
+- first create two models in models.py (department and countries)
+
+- then makemigrations and migrate
+
+- the for seeding 
+    python manage.py loaddata MasterDepartment.json
+    ython manage.py loaddata MasterCountries.json
+
+# How To Make Relations Between Two tables
+
+- first Create models in model.py
+- Make seeding
+- Then add Tabels which has to make relationship with parent table
+    (Department and Countries has to make relationship with Employee Table)
+
+
+ # Cascading DropDown List
+
+* Model.PROTECT
+
+ - If we delete records from master table then child record will not be delteted.
+
+* Model.CASCADE
+
+ - IF we delete records from master table then the child record will be deleted.
