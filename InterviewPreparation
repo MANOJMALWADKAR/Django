@@ -1,0 +1,544 @@
+# What is Django?
+
+- Django is a high-level, open-source web framework for Python that allows rapid development of secure and maintainable websites.
+- It primarily focuses on backend development, providing tools and features.
+- It emphasizes reusability, rapid development, and the principle of "Don't Repeat Yourself" (DRY).
+- Django includes an ORM for database management, a templating engine, and other features to make web development easier and faster.
+
+# What are the main features of Django?
+
+Backend Functionality
+
+- MVC Architecture (Model-View-Controller): Django follows the MTV (Model-Template-View) architecture, which is similar to MVC. It separates the logic, presentation, and data into three main components:
+
+  Model: Defines the data structure (i.e., database schema).
+  Template: Handles the presentation layer (HTML, CSS, JavaScript).
+  View: Handles the request and response logic (i.e., the backend functions and interactions).
+
+- Database Integration: Django comes with built-in support for databases such as PostgreSQL, MySQL, SQLite, and others. It allows you to define models that Django automatically translates into database tables.
+
+- Authentication: Django includes a powerful authentication system to handle user login, registration, permissions, and security.
+
+- Routing: URL routing is handled easily in Django through its URL dispatcher, allowing different views to respond to different requests.
+
+- Admin Interface: Django comes with an auto-generated admin interface for easy management of the backend data.
+
+FrondEnd Functionality
+
+- Django Templates: This allows you to create HTML pages that are dynamically rendered using data from the backend. You can embed variables, loops, and conditional logic directly into HTML using Django's template language.
+
+- Static Files: Django allows you to manage static files such as CSS, JavaScript, and images using its static files handling system.
+
+- Forms: Django provides an easy way to handle forms for user input, with automatic generation of forms, validation, and handling POST requests.
+
+- Frontend Framework Integration: Django can be combined with popular frontend frameworks like React, Vue.js, or Angular. For example, you can use Django for serving API endpoints (using Django REST Framework) while having React or Vue.js manage the frontend on the client side.
+
+# Creating Venv And Install Django
+
+1. Install Python
+2. Navigate to project folder
+3. Create a virtual environment
+   python3 -m venv venv_name
+
+4. Activate the Venv
+   source venv/bin/activate
+
+5. Install Django
+   pip install django
+
+# What is Pip
+
+- pip stands for Pip Installs Packages (or Pip Installs Python), and it is the default package manager for Python.
+- It allows you to install, upgrade, and manage Python packages and libraries from the Python Package Index (PyPI), which is a repository containing a large collection of third-party Python libraries.
+
+- When you use pip install <package-name>, pip searches PyPI(Python Package Index), downloads the package (and any dependencies), and installs them into your environment.
+
+Key Functions of pip
+
+1. pip install django //Install Packages
+2. pip uninstall django //uninstall packages
+3. pip list //list installed packages
+4. pip show django //show package information
+5. pip install --upgrade django //upgrade packages
+6. pip freeze > requirements.txt //file that list all installed packages and their versions in environment. this is usefull for sharing your projects dependencies with other
+7. pip install -r requirements.txt // install from requirements file
+
+# Understanding MVT Architecture
+
+- The MVT (Model-View-Template) architecture is the core design pattern used by Django.
+- MVT is a variation of the widely-known MVC (Model-View-Controller) pattern.
+
+1. Model:
+
+- The Model is responsible for managing the data of the application. It defines the structure of the data, typically in terms of a database table, and provides a way to query, create, update, and delete records.
+
+* Database Representation: A model defines how data is structured in the database. In Django, each model corresponds to a database table, and each instance of a model represents a row in that table.
+
+* Business Logic: Models can contain methods for manipulating the data and performing business logic related to the data.
+
+* Data Validation: Models also define the rules for validation (e.g., field types, maximum length) to ensure data consistency.
+
+2. View
+
+- The View in Django is responsible for the user interface (UI) or the presentation logic. It handles HTTP requests, processes data (often by querying the model), and returns a response (usually in the form of HTML content or a redirect).
+
+* Request Handling: A view receives HTTP requests, processes them (e.g., retrieves data from models, handles form submissions), and returns an HTTP response.
+
+* Business Logic (to some extent): While business logic is primarily in the model, views may also contain some logic related to how the data should be presented or what should happen in response to a request (e.g., showing a list of books, processing user input).
+
+* Interaction with the Template: The view typically passes data to a template, which is responsible for rendering the HTML. In Django, views are Python functions or classes.
+
+3. Template
+
+- The Template is responsible for defining the structure and layout of the web page that the user will see. It contains HTML and other markup, mixed with Django-specific template tags and filters that allow dynamic content generation.
+
+* Rendering the HTML: Templates are used to display the data (usually passed from the view) in a specific HTML format.
+
+* Dynamic Content: Django templates allow dynamic content generation, meaning you can insert values from the model or the view into the HTML structure.
+
+# MVT Architecure Overview
+
+- Request: A user makes a request to the server (e.g., by visiting a URL).
+
+- URL Dispatcher: Django matches the request to a specific view via its URLconf (a set of URL patterns in urls.py).
+
+- View: The view receives the request, processes the data (which may involve querying the Model), and prepares data to be passed to the Template.
+
+- Template: The template is rendered using the data passed from the view, and HTML is generated.
+
+- Response: The generated HTML is sent back to the user's browser as an HTTP response.
+
+# Create Simple Django Application
+
+- django-admin startproject myproject
+- cd myproject
+- python manage.py startapp myapp
+
+- Add myapp and Template to myproject/settings.py to
+  TEMPLATE_DIR = BASE_DIR/'templates'
+  INSTALLED_APPS=[
+  'myapp'
+  ]
+  TEMPLATES = [
+  {
+  "DIRS": [TEMPLATE_DIR],
+  },
+
+  ]
+
+- myapp/views.py
+
+- Create myapp/urls.py(if not already exist)
+  urlpatterns = [
+  path('hello/', views.hello_world), # Maps the URL to the view
+  ]
+
+- Link myapp urls to myproject/urls.py
+  urlpatterns = [
+  path('admin/', admin.site.urls),
+  path('', include('myapp.urls')), # Include app's URLs
+  ]
+
+- python manage.py runserver
+
+# Django Project Structure
+
+- myproject/
+  manage.py
+  myproject/
+  **init**.py
+  settings.py
+  urls.py
+  asgi.py
+  wsgi.py
+
+1. manage.py
+
+- The manage.py file is a command-line utility that lets you interact with your Django project in several ways. This includes running the development server, migrating the database, creating applications, and more. You will use this file to run Django commands.
+
+For example:
+
+python manage.py runserver - starts the development server.
+python manage.py migrate - applies database migrations.
+python manage.py startapp myapp - creates a new app.
+
+2. **init**.py
+
+- This is an empty file that tells Python that the directory should be treated as a Python package. It allows you to import files from this directory into other parts of the project.
+
+3. settings.py
+
+- This file contains the configuration settings for your Django project. It includes:
+
+Database configuration: settings for your database connection.
+Installed apps: the apps installed in your project.
+Middleware: components that process requests and responses.
+Templates, static files, and more.
+
+4. urls.py
+
+- The urls.py file defines the URL routing for your project.
+- It maps URLs to views (functions that return a response when a user visits a particular URL).
+
+5. asgi.py
+
+- ASGI stands for Asynchronous Server Gateway Interface, and it's used to handle asynchronous web frameworks.
+
+6. wsgi.py
+
+- WSGI stands for Web Server Gateway Interface, and this file is used to run your Django project in a production environment with a WSGI-compatible web server
+
+# Django Application Structure
+
+myapp/
+**init**.py
+admin.py
+apps.py
+models.py
+tests.py
+views.py
+migrations/
+
+1. admin.py
+
+- This is where you can register your models to make them accessible via the Django admin interface.
+
+2. apps.py
+
+- This file contains the configuration for your app. By default, the AppConfig class is created in this file. You usually don’t need to modify this unless you want to customize app settings.
+
+3. models.py
+
+- This is where you define your app’s data models.
+
+4. tests.py
+
+- This file contains test cases for your app. Django uses the unittest framework for writing tests
+
+5. views.py
+
+- In this file, you define views that are responsible for handling requests and returning responses
+
+6. migrations/
+
+- This folder contains database migration files. Migrations are how Django updates the database schema based on changes made to models.
+
+# Request And Response Life Cycle
+
+1. Client sends a request (e.g., GET /hello/?name=Django).
+2. Django Server (via WSGI/ASGI) receives the request.
+3. The request passes through middleware (e.g., session management, CSRF protection).
+4. The URLconf (urls.py) maps the URL to the corresponding view function.
+5. The view function processes the request, possibly querying the database, and prepares data.
+6. The view renders a template (if applicable) or generates a response (e.g., JSON, HTML).
+7. Middleware processes the response (e.g., adding headers, logging). 8. The response is sent back to the client.
+
+# Understanding Debugging And Implementing Logging
+
+1. Django Debug Mode
+
+- settings.py
+  DEBUG = True //Django will show detailed error pages for any exceptions that occur
+
+2. Debug MOde in vsCode
+
+- logging in a Django project helps capture runtime information, such as errors, warnings, or informational messages, which is crucial for diagnosing issues, monitoring performance, and ensuring smooth operation, especially in production environments.
+
+- allows you to log messages to different destinations (files, databases, email, etc.) and at different severity levels (DEBUG, INFO, WARNING, ERROR, CRITICAL).
+
+- Django allows you to configure logging in the settings.py file using the LOGGING setting.
+
+  logger.debug('This is a debug message')
+  logger.info('This is an informational message')
+  logger.warning('This is a warning message')
+  logger.error('This is an error message')
+  logger.critical('This is a critical message')
+
+# Built-in Template Tags
+
+Flow Control: {% if %}, {% for %}, {% block %}, {% empty %}.
+Filters: {% length %}, {% date %}, {% lower %}.
+Template Inclusion: {% include %}, {% extends %}, {% block %}.
+Static Files: {% static %}, {% csrf_token %}.
+URL generation: {% url %}.
+
+- Helps in working with data, or displaying content dynamically.
+
+1. {% if %} – Conditional Logic
+
+{% if user.is_authenticated %}
+
+<p>Welcome, {{ user.username }}!</p>
+{% else %}
+<p>Please log in to access this page.</p>
+{% endif %}
+
+2. {% for %} - looping over items
+<ul>
+{% for product in products %}
+    <li>{{ product.name }} - ${{ product.price }}</li>
+{% empty %}
+    <li>No products available.</li>
+{% endfor %}
+</ul>
+
+3. {{ variable|length }} – Getting the length of an object
+<p>The list contains {{ products|length }} products.</p>
+
+4. {{ variable|lower }} – Converting to lowercase
+<p>{{ 'HELLO WORLD'|lower }}</p>
+
+5. {% include %} – Including Templates
+{% include "header.html" %}
+<p>Content of the page.</p>
+{% include "footer.html" %}
+
+# REST_API (Alternative of GraphQL, WebSocket)
+
+- A REST API (Representational State Transfer Application Programming Interface) is a set of rules and conventions that allow applications to communicate with each other over the internet using HTTP requests.
+
+- REST APIs are based on the principles of REST, an architectural style for designing networked applications.
+
+- It is widely used for web services, especially for enabling communication between clients (such as browsers or mobile apps) and servers.
+
+1. Statelessness: Each request from a client to the server must contain all the necessary information to understand and process the request. The server does not store any state of the client between requests. Each request is independent.
+
+2. Client-Server Architecture: The client (such as a web browser or mobile application) and the server are separate entities. The client sends requests, and the server responds with the data. This separation allows for better modularity and scalability.
+
+3. Uniform Interface: REST APIs use a standardized set of HTTP methods (GET, POST, PUT, DELETE, etc.) to operate on resources. A "resource" refers to any piece of data or object that the API can operate on, such as users, products, or posts. Resources are typically represented in the form of URLs (Uniform Resource Locators).
+
+4. Cacheability: Responses from the server should explicitly specify whether they are cacheable or not. This allows clients to store copies of responses for future use, improving performance and reducing the need for repeated requests.
+
+5. Layered System: A REST API can have multiple layers (such as a caching layer, load balancers, or security layers) between the client and the server. These layers can provide additional functionality without affecting the client’s interaction with the API.
+
+6. Code on Demand (Optional): In some cases, servers can temporarily extend the functionality of a client by sending executable code, such as JavaScript, that the client can run. However, this is optional and not typically used in REST APIs.
+
+METHODS
+
+- GET: Retrieves data from the server (read operation).
+- POST: Sends data to the server to create a new resource (create operation).
+- PUT: Updates an existing resource on the server (update operation). PUT typically requires the complete resource in the request body.
+- PATCH: Partially updates an existing resource. Unlike PUT, which typically replaces the entire resource, PATCH allows updating only specific fields.
+- DELETE: Removes a resource from the server (delete operation).
+
+# Consuming REST_API
+
+- To make HTTP requests to an external REST API, you can use the requests library
+
+pip install requests
+
+# views.py
+
+import requests
+from django.shortcuts import render
+
+def fetch_data(request): # URL of the external REST API (JSONPlaceholder in this case)
+api_url = "https://jsonplaceholder.typicode.com/posts"
+
+    # Making a GET request to fetch data
+    response = requests.get(api_url)
+
+    # Check if the request was successful (status code 200)
+    if response.status_code == 200:
+        # Convert the JSON response into a Python dictionary
+        data = response.json()
+    else:
+        # Handle the error (if any)
+        data = {"error": "Failed to retrieve data"}
+
+    # Render data to the template (you can pass it to the context)
+    return render(request, 'display_data.html', {'data': data})
+
+    <ul>
+        {% for post in data %}
+            <li>
+                <strong>{{ post.title }}</strong><br>
+                {{ post.body }}
+            </li>
+        {% empty %}
+            <li>No data available</li>
+        {% endfor %}
+    </ul>
+
+# Creating Master Pages
+
+- A master page is a base template that defines the overall layout and structure of your website.
+- Other pages (or templates) can then extend this base template and override specific blocks to provide their unique content, while still inheriting the common structure, such as headers, footers, and navigation menus.
+
+//MASTER PAGE / BASE TEMPLATE
+
+<body>
+    <header>
+        <h1>My Website</h1>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/about/">About</a></li>
+                <li><a href="/contact/">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="content">
+        {% block content %} <!-- This is where the content of other pages will go --> {% endblock %}
+    </div>
+
+    <footer>
+        <p>&copy; 2024 My Website</p>
+    </footer>
+
+</body>
+
+//Child Templates
+
+<!-- templates/home.html -->
+
+{% extends 'base.html' %} <!-- Extending the base template -->
+
+{% block title %}Home - My Website{% endblock %} <!-- Overriding the title block -->
+
+{% block content %}
+
+<h2>Welcome to the Home Page!</h2>
+<p>This is the home page content.</p>
+{% endblock %}
+
+# Working With Models
+
+- Models represent the data of your application, and Django uses an Object-Relational Mapping (ORM) system to allow you to work with your database as if you're working with Python objects.
+
+/// models.py
+
+from django.db import models
+
+class Book(models.Model):
+title = models.CharField(max_length=200)
+author = models.CharField(max_length=100)
+published_date = models.DateField()
+isbn = models.CharField(max_length=13, unique=True)
+pages = models.IntegerField()
+cover_image = models.ImageField(upload_to='books/')
+
+    def __str__(self):
+        return self.title
+
+# What are the partial views
+
+- A partial view is a small, reusable section of a larger template that can be included in multiple templates.
+- In Django, partial views are typically implemented using {% include %} to insert smaller template files into a main template.
+- Using partial views promotes code reusability, better organization, and makes your code easier to maintain and scale.
+
+# Usefull Built in Filters
+
+- String Filters: lower, upper, title, capfirst
+- Date/Time Filters: date, time, length
+- Sorting Filters: dictsort, dictsortreversed
+- Default Filters: default, default_if_none
+- Collection Filters: length, join, random, slice
+- Others: truncatewords, escape, urlencode, stringformat, etc.
+
+* Custom Filter
+
+//myapp/templatetags/custom_filters.py
+
+from django import template
+
+register = template.Library()
+
+@register.filter(name='reverse_string')
+def reverse_string(value):
+"""Reverse a string"""
+return value[::-1]
+
+# How To Configure Database Configuration
+
+- Setting Up Database Configuration
+
+- Install postgresql and pgadmin
+
+- Configure Database in setting.py
+
+  - Create new project in venv
+    django-admin startproject CRUDOperation
+
+  - Create new app in venv
+    django-admin startapp PayRollApp
+
+  - Install psycopg2 library(connections between Python applications and PostgreSQL databases.)
+    pip install psycopg2
+
+  - In project settings.py add database config and alonside create new server and database in pgadmin(with correct db_name, user,password,host,port)
+    'default': {
+    'ENGINE': 'django.db.backends.postgresql', # Use the PostgreSQL backend
+    'NAME': 'myproject_db2', # Your database name
+    'USER': 'postgres', # Database user
+    'PASSWORD': 'password', # Password for the user
+    'HOST': 'localhost', # Database host
+    'PORT': '5432', # Default PostgreSQL port
+    }
+
+  - Create Migrations()
+    python manage.py makemigrations app_name
+
+  - Apply Migration(To apply the migrations and update your database schema,)
+    python manage.py migrate
+
+  - In last check db in pgadmin4 for tables(newly added)
+
+# What are the Django Forms and how do they work
+
+- Django Forms are a way to handle user input and data validation in Django web applications. Forms are commonly used in web applications to process data submitted by users, such as user registrations, contact forms, or any other type of data submission.
+
+- Data Validation: Django provides built-in validation mechanisms for form fields (e.g., checking if a field is required, ensuring a valid email format, etc.).
+- HTML Form Generation: Django automatically generates the appropriate HTML form for fields specified in the form class.
+- Security: Django includes built-in protection against CSRF (Cross-Site Request Forgery) attacks by adding CSRF tokens to forms.
+- Data Binding: When a user submits a form, Django automatically binds the submitted data to the form instance, allowing easy access to the data.
+- Form Handling: Django handles both displaying the form to the user and processing the data once the form is submitted.
+
+* How Do Django Forms Work?
+
+- Form Creation: You define a form class in forms.py by inheriting from Django's forms.Form or forms.ModelForm class.
+- Form Rendering: In the view, you instantiate the form, pass it to the template, and render it using Django's template system.
+- Form Submission: When a form is submitted, the view receives the POST data, binds it to the form, validates it, and processes the data (if valid).
+- Form Validation: Django will automatically validate the data, checking if the fields contain valid values (e.g., checking if an email is correctly formatted).
+- Form Processing: If the form is valid, you can process the data (e.g., saving it to the database or sending an email). If the form is invalid, you can re-render the form with error messages.
+
+///forms.py
+from django import forms
+
+class ContactForm(forms.Form):
+name = forms.CharField(max_length=100)
+email = forms.EmailField()
+message = forms.CharField(widget=forms.Textarea)
+
+///views.py
+from django.shortcuts import render
+from .forms import ContactForm
+
+def contact_view(request):
+form = ContactForm()
+return render(request, 'contact.html', {'form': form})
+
+///contact.html
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Submit</button>
+</form>
+
+///views.py
+
+- def contact_view(request):
+  if request.method == 'POST':
+  form = ContactForm(request.POST) # Bind data to form
+  if form.is_valid(): # Validate the form # Process the data (e.g., save to database or send an email)
+  name = form.cleaned_data['name']
+  email = form.cleaned_data['email']
+  message = form.cleaned_data['message'] # You can now process the data (e.g., save it to a database or send an email)
+  return render(request, 'success.html', {'name': name})
+  else: # If the form is invalid, re-render it with errors
+  return render(request, 'contact.html', {'form': form})
+  else:
+  form = ContactForm()
+  return render(request, 'contact.html', {'form': form})
