@@ -1,0 +1,111 @@
+# Explain the Concept of ORM
+
+- ORM (Object-Relational Mapping) is a programming technique used to interact with a database in an object-oriented manner, allowing developers to interact with database records
+
+- In the context of Django, Django ORM is a system that allows developers to use Python code to interact with databases instead of writing SQL queries directly.
+
+- Django ORM provides an abstraction layer to interact with the database and enables you to create, retrieve, update, and delete records in the database using Python objects.
+
+* Why ORM?
+
+1. Abstraction: ORM abstracts away the underlying database queries and allows developers to interact with the database using high-level objects and methods instead of writing raw SQL.
+
+2. Database Agnostic: ORM makes it easier to switch databases. Django ORM supports multiple relational databases (such as PostgreSQL, MySQL, SQLite, and Oracle), and you can switch between them with minimal code changes.
+
+3. Simplified Queries: It simplifies complex database queries by automatically generating the necessary SQL queries. This can save time and reduce errors in SQL code.
+
+4. Security: ORM helps prevent SQL injection attacks by automatically escaping user inputs when building queries.
+
+5. Migration Support: Django ORM integrates with Django's migration system, which allows changes to the database schema to be tracked and managed easily.
+
+# CRUD OPERATION IN ORM
+
+1. Creating a model
+
+from django.db import models
+
+class Book(models.Model): // The Book class represents a table named book in the database.
+title = models.CharField(max_length=200) //The title, author, and published_date are columns in the book table.
+author = models.CharField(max_length=100)
+published_date = models.DateField()
+
+    def __str__(self):      //The __str__ method is defined to provide a human-readable string representation of the object
+        return self.title
+
+2. Migrations
+
+- Migrations in Django are used to apply changes to the database schema based on the changes you make in the models.
+  python manage.py makemigrations # Creates migration files
+  python manage.py migrate # Applies migrations to the database
+
+3. Creating Records: You can create a new record by instantiating a model and saving it to the database.
+
+// Creating a new Book record
+book = Book(title="Django for Beginners", author="John Doe", published_date="2022-06-15")
+book.save() # Saves the record to the database
+
+4. Retrieving Records: You can retrieve records from the database using Django’s query methods.
+
+// Retrieve all books from the database
+all_books = Book.objects.all()
+
+// Retrieve a single book by ID
+book = Book.objects.get(id=1)
+
+// Retrieve books filtered by some criteria
+books_by_author = Book.objects.filter(author="John Doe")
+
+5. Updating Records: You can update records by modifying the fields of a model instance and calling the save() method.
+
+   book = Book.objects.get(id=1)
+   book.title = "Updated Title"
+   book.save() # Updates the record in the database
+
+6. Deleting Records: You can delete records using the delete() method.
+
+book = Book.objects.get(id=1)
+book.delete() # Deletes the record from the database
+
+- A QuerySet is a collection of database queries. It allows you to filter, order, and manipulate the results of a query.
+
+# Filtering:
+
+books = Book.objects.filter(author="John Doe")
+
+# Ordering:
+
+books = Book.objects.order_by('published_date')
+
+# Limiting:
+
+books = Book.objects.all()[:3]
+
+# Relationships Between Models
+
+1. One-to-many (ForeignKey): A model can have a ForeignKey field that establishes a many-to-one relationship with another model.
+
+   class Author(models.Model):
+   name = models.CharField(max_length=100)
+
+   class Book(models.Model):
+   title = models.CharField(max_length=200)
+   author = models.ForeignKey(Author, on_delete=models.CASCADE)
+
+2. Many-to-many (ManyToManyField): A model can have a ManyToManyField that establishes a many-to-many relationship with another model.
+
+class Book(models.Model):
+title = models.CharField(max_length=200)
+genres = models.ManyToManyField('Genre')
+
+class Genre(models.Model):
+name = models.CharField(max_length=100)
+
+3. One-to-one (OneToOneField): A model can have a OneToOneField that establishes a one-to-one relationship with another model.
+
+class Profile(models.Model):
+user = models.OneToOneField(User, on_delete=models.CASCADE)
+bio = models.TextField()
+
+# Conclusion
+
+- Django ORM provides an intuitive and powerful way to interact with the database using Python code instead of SQL. By using models, migrations, QuerySets, and built-in relationship fields, you can easily perform CRUD operations and work with complex data structures in your Django applications. ORM offers a clean, consistent way to manage the database schema and reduces the need to write raw SQL queries. It also makes it easier to maintain your application and switch between different databases.
