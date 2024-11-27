@@ -1,0 +1,37 @@
+# How Models are designed
+
+- from django.db import models
+
+- class Book(models.Model):
+  title = models.CharField(max_length=100)
+  author = models.CharField(max_length=100)
+  published_date = models.DateField()
+
+  def **str**(self):
+  return self.title
+
+# HOW Views are designed
+
+- from django.shortcuts import render
+- from .models import Book
+
+- def book_list(request):
+  books = Book.objects.all()
+  return render(request, 'book_list.html', {'books': books})
+
+# How Templates are designed
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Book List</title>
+</head>
+<body>
+    <h1>Books</h1>
+    <ul>
+        {% for book in books %}
+            <li>{{ book.title }} by {{ book.author }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
