@@ -9,7 +9,7 @@
 
 Backend Functionality
 
-- MVC Architecture (Model-View-Controller): Django follows the MTV (Model-Template-View) architecture, which is similar to MVC. It separates the logic, presentation, and data into three main components:
+- MVT Architecture (Model-View-Template): Django follows the MTV (Model-Template-View) architecture, which is similar to MVC. It separates the logic, presentation, and data into three main components:
 
   Model: Defines the data structure (i.e., database schema).
   Template: Handles the presentation layer (HTML, CSS, JavaScript).
@@ -542,3 +542,222 @@ return render(request, 'contact.html', {'form': form})
   else:
   form = ContactForm()
   return render(request, 'contact.html', {'form': form})
+
+# working with different caching providers
+
+- caching is an essential technique for improving the performance of web applications by storing frequently accessed data in memory.
+- Django supports different caching backends (providers) to store this data, ranging from local in-memory caches to more scalable distributed caches like Redis and Memcached.
+
+* settings.py
+  CACHES = {
+  'default': {
+  'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+  'LOCATION': 'unique-snowflake', # Optional, used for segmentation of memory
+  }
+  }
+
+1. In-Memory Cache
+
+- This is the default cache backend, which is simple and fast but only works within a single process
+
+2. File-Based Cache
+
+- This cache stores data in the file system. It is useful when you need a simple and persistent cache but do not want to use memory-based caching.
+
+3. Memcached
+
+- Memcached is a high-performance, distributed memory object caching system. It's commonly used in large-scale applications for caching. Django can interface with Memcached via the python-memcached or pylibmc libraries.
+
+4. Redis
+
+- Redis is a fast, in-memory key-value store often used for caching, session management, and pub/sub messaging
+
+5. Database Cache
+
+- Database Cache
+  You can also store cache data in a database. This approach is less common but can be useful when you need persistent caching across server restarts and a relational data structure.
+
+# Uploading and Downloading Files
+
+// Uploading
+
+- Configuring the settings
+  location where files will be uploaded and the media URL
+  MEDIA_URL is the URL that will be used to access the files.
+  MEDIA_ROOT is the local file system path where uploaded files will be stored.
+
+- Create a Model for File Upload
+- Create a Form for File Upload
+- Create Views for Handling the Upload
+- Define URL Patterns
+- Create Template for File Upload Form
+
+# Working With Cookies(Client-side (in browser))
+
+- cookies are small pieces of data that are sent from the server and stored on the client's browser
+- Cookies can be used for various purposes like session management, user preferences, or tracking user activities.
+
+* Key Concepts
+
+- Setting a Cookie: You can set cookies by modifying the HttpResponse object. The set_cookie() method of HttpResponse is used to send cookies from the server to the browser.
+
+- Reading a Cookie: Cookies sent by the client are available in request.COOKIES as a dictionary, where each key is the cookie name and the value is the cookie's content.
+
+- Deleting a Cookie: Cookies can be deleted by setting their expiration date to a past date using delete_cookie().
+
+1. Setting a Cookie: set_cookie()
+   \\ Syntax:
+   response.set_cookie(key, value, max_age=None, expires=None, path='/')
+
+   \\ Eg
+   from django.http import HttpResponse
+
+   def set_cookie_view(request):
+   response = HttpResponse("Cookie Set")
+   response.set_cookie('username', 'JohnDoe', max_age=3600) # 1 hour
+   return response
+
+   // cookie named username with the value JohnDoe, which will expire in 1 hour.
+
+2. Retrieving a Cookie: request.COOKIES.get()
+
+   \\Eg
+   from django.http import HttpResponse
+
+   def get_cookie_view(request):
+   username = request.COOKIES.get('username', 'Guest') # Default to 'Guest' if cookie is not found
+   return HttpResponse(f"Hello, {username}")
+
+3. Deleting a Cookie: delete_cookie()
+
+   \\Eg
+   from django.http import HttpResponse
+
+   def delete_cookie_view(request):
+   response = HttpResponse("Cookie Deleted")
+   response.delete_cookie('username')
+   return response
+
+\\\\Cookie Eg
+def login_view(request):
+if request.method == 'POST':
+username = request.POST.get('username')
+password = request.POST.get('password')
+
+        # Here, you might verify the username and password
+
+        response = HttpResponse("Welcome, " + username)
+        response.set_cookie('username', username)
+        response.set_cookie('last_login', str(datetime.now()))
+        return response
+    return HttpResponse("Please log in")
+
+\*\\ Secure Cookies:
+
+- If you're using cookies for authentication (e.g., session cookies), ensure that cookies are marked as secure so that they are sent only over HTTPS. You can set this with the secure=True argument in set_cookie().
+
+- response.set_cookie('username', 'JohnDoe', secure=True)
+
+# Working With Sessions(Server-side (on the server))
+
+- sessions allow you to store and retrieve arbitrary data on a per-user basis.
+- This is particularly useful for things like authentication, shopping carts, user preferences, and other temporary data that needs to persist between requests.
+
+* How Django Sessions Work
+
+- Django's session framework allows you to store session data on the server side, while the client is typically given a session identifier (usually stored in a cookie). The most common implementation uses the sessionid cookie to track the session.
+
+* Working With Sessions
+
+1.  Enabling Sessions:
+
+    - Django uses middleware to handle sessions.
+
+      INSTALLED_APPS = [
+      'django.contrib.sessions',
+      ]
+
+      MIDDLEWARE = [
+      'django.contrib.sessions.middleware.SessionMiddleware', # This handles sessions
+      ]
+
+2.  Storing data in sessions:
+
+    - request.session to store data
+      \\Eg
+      def set_session(request):
+      request.session['username'] = 'JohnDoe'
+      return HttpResponse("Session data set")
+
+3.  Retrieving Data from Sessions
+
+    - def get_session(request):
+      username = request.session.get('username', 'Guest') # Default to 'Guest' if no session data
+      return HttpResponse(f"Hello, {username}")
+
+4.  Modifying Data
+
+    - request.session['username'] = 'JaneDoe'
+
+5.  Deleting Data
+
+    - del request.session['username']
+
+6.  Clear all session data
+
+    - request.session.flush()
+
+7.  Session Expiration and Timeouts
+
+    - SESSION_COOKIE_AGE = 3600 # 1 hour
+    - SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+    - SESSION_SAVE_EVERY_REQUEST = True
+    - SESSION_COOKIE_SECURE = True
+
+    \\ request.session.set_expiry(3600)
+
+- When to Use Cookies vs Sessions in Django
+
+* Use Cookies when:
+  You need to store small, non-sensitive information.
+  You want data to persist across multiple sessions or across browser restarts.
+  You’re storing authentication tokens (like JWTs) or user preferences.
+
+* Use Sessions when:
+  You need to store sensitive data, such as authentication information, that should not be accessible to the client.
+  You need to manage user state during the session, like shopping carts or user authentication status.
+  You want server-side control over the data and its expiration.
+
+# Configuring Email Provider
+
+- To send emails, Django needs configuration details like the email backend, SMTP server, port, and login credentials. This can be set up in the settings.py file of your Django project.
+
+Step 1: Configure Email Settings in settings.py
+\\ settings.py
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com' # Gmail's SMTP server
+EMAIL_PORT = 587 # Use 587 for TLS (StartTLS) or 465 for SSL
+EMAIL_USE_TLS = True # Use TLS (True for TLS, False for SSL)
+EMAIL_USE_SSL = False # False because we are using TLS
+EMAIL_HOST_USER = 'your-email@gmail.com' # Your email address
+EMAIL_HOST_PASSWORD = 'your-email-password' # Your email password or app-specific password
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER # Default from email address (can be same as EMAIL_HOST_USER)
+
+Step 2: use App Passwords
+
+Enable 2-step verification on your Gmail account.
+Create an app-specific password.
+Use that password in the EMAIL_HOST_PASSWORD setting instead of your regular Gmail password.
+
+from django.core.mail import send_mail
+
+Step 3: Sending a simple email
+
+send_mail(
+'Subject here', # Subject of the email
+'Here is the message body.', # Body of the email
+'from@example.com', # Sender's email address
+['to@example.com'], # Recipient's email address (can be a list)
+fail_silently=False, # If True, it won't raise an error in case of failure
+)
